@@ -1,8 +1,11 @@
-import Example from './components/Example';
-import SecondExample from './components/SecondExample';
+// import Example from './components/Example';
+// import SecondExample from './components/SecondExample';
+import CheckAuth from './components/CheckAuth';
 
-export default Example;
+export default CheckAuth;
 
+/*
 export {
-  SecondExample,
+  CheckAuth,
 };
+*/
