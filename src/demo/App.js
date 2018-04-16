@@ -1,30 +1,28 @@
 import React from 'react';
-import { CheckAuthComp, LoggedIn, LoggedOut } from '../lib';
+import CheckAuthComp, { LoggedIn, LoggedOut } from '../lib';
 
-const LoginSuccess = ( props ) =>
-  <div>
-    { `Hello ${ props.userinfo.name }` } @ { props.userinfo.email }
-  </div>;
+const LoginSuccess = ( props ) => {
+  return (
+    <div>
+      { `Hello ${ props.userInfo.username }` }
+    </div>
+  );
+}
 
 const LoginFailed = ( props ) =>
   <div>
-    <a href="https://google.com">Click to login</a>
+    <a href="https://auth.commercialization66.hasura-app.io/ui?redirect_url=http://localhost:3000/">Click to login</a>
   </div>;
 
 const App = () => (
   <div>
-    <CheckAuthComp authEndpoint={'https://auth.catalpa92.hasura-app.io/v1/user/info'}>
-      { ( userinfo ) => {
-          return [
-            <LoggedIn key={1} { ...userinfo }>
-              <LoginSuccess />
-            </LoggedIn>,
-            <LoggedOut key={2} { ...userinfo }>
-              <LoginFailed />
-            </LoggedOut>
-          ];
-        }
-      }
+    <CheckAuthComp authEndpoint={'https://auth.commercialization66.hasura-app.io/v1/user/info'}>
+      <LoggedIn>
+        <LoginSuccess />
+      </LoggedIn>
+      <LoggedOut>
+        <LoginFailed />
+      </LoggedOut>
     </CheckAuthComp>
   </div>
 );

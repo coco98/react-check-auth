@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './LoggedIn.css';
 
 /*
@@ -14,9 +15,13 @@ class LoggedIn extends React.Component  {
 }
 */
 const LoggedIn = ( props ) => {
-  return props.isloggedin ? (
-    React.cloneElement(props.children, { ...props })
+  return props.isLoggedIn ? (
+    React.cloneElement(props.children, { isLoggedIn: props.isLoggedIn, userInfo: props.userInfo, fetchError: props.fetchError })
   ) : null;
 };
 
-export default LoggedIn;
+const mapStateToProps = (state) => {
+  return { ...state };
+};
+
+export default connect(mapStateToProps)(LoggedIn);

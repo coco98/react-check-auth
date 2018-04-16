@@ -1,9 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 const LoggedOut = ( props ) => {
-  return !props.isloggedin ? (
+  return !props.isLoggedIn ? (
     React.cloneElement(props.children, { ...props.userInfo })
   ) : null;
 };
 
-export default LoggedOut;
+const mapStateToProps = (state) => {
+  return { ...state };
+};
+
+export default connect(mapStateToProps)(LoggedOut)
