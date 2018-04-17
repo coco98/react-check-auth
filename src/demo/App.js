@@ -5,27 +5,12 @@ import './App.css';
 
 const logo = require('./hasura.png');
 
-const imageObj = [
-  {
-    name: 'image1',
-    src: 'https://picsum.photos/320/240?random',
-  },
-  {
-    name: 'image2',
-    src: 'https://picsum.photos/320/240?random',
-  },
-  {
-    name: 'image3',
-    src: 'https://loremflickr.com/320/240?random',
-  }
-]
-
 const authEndpoint = 'https://auth.commercialization66.hasura-app.io/v1/user/info';
 const reqOptions = {
   'method': 'GET',
-  'credentials': 'include',
   'headers': {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer 9a17d009dd48c18db768816eef6f633dc2b26dbb8cb672c4',
   },
 }
 
@@ -46,8 +31,7 @@ const App = (props) => (
           <li>
             <span>
               <AuthConsumer>
-                { (props) => {
-                  const { isLoading, userInfo, error, refreshAuth } = props;
+                { ({ isLoading, userInfo, error, refreshAuth }) => {
                   if ( isLoading ) {
                     return (
                       <span>Loading...</span>
@@ -68,13 +52,6 @@ const App = (props) => (
             </span>
           </li>
         </ul>
-      </div>
-      <div className="image_wrapper">
-        { imageObj.map((i, key) => 
-          <div key={key} className="indiv_image">
-            <img src={ i.src } alt={ i.name } />
-          </div>
-        ) }
       </div>
       <div className="content_wrapper">
         <p>Proin cursus pulvinar justo at venenatis. Sed tortor velit, commodo commodo lacinia ut, dapibus non nulla. Aenean et rutrum massa. Aliquam eu enim hendrerit, varius ligula ac, faucibus neque. Mauris felis urna, pulvinar at lectus ut, sodales auctor sem. Aenean non dapibus velit, vitae blandit enim. Curabitur pharetra gravida elit eget eleifend. Cras erat purus, posuere a orci commodo, varius mollis est. In hac habitasse platea dictumst. Proin interdum egestas augue, non sagittis nulla interdum eget. Morbi eu massa eu turpis sodales placerat sed ut dui. Sed rhoncus metus eu dignissim congue. Phasellus dignissim mi sagittis sem ornare porttitor. Nam metus massa, sollicitudin sit amet massa nec, condimentum volutpat metus. Aliquam erat volutpat. Cras suscipit urna ut justo posuere, non tincidunt risus molestie.</p>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Consumer } from '../context';
 
-class CustomCheckAuth extends React.Component {
+class AuthConsumer extends React.Component {
   render() {
     return (
       <Consumer>
@@ -13,8 +13,8 @@ class CustomCheckAuth extends React.Component {
   }
 };
 
-CustomCheckAuth.propTypes = {
+AuthConsumer.propTypes = {
   children: PropTypes.func.isRequired,
 };
 
-export default CustomCheckAuth;
+export default AuthConsumer;

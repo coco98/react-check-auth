@@ -2,8 +2,7 @@ import React from 'react';
 
 import { Provider, defaultState } from '../context';
 import PropTypes from 'prop-types';
-
-import 'whatwg-fetch';
+import fetch from 'isomorphic-fetch';
 
 class AuthProvider extends React.Component  {
   constructor() {
@@ -15,8 +14,7 @@ class AuthProvider extends React.Component  {
     this.state = { ...defaultState, refreshAuth: this.refreshAuth };
   }
   componentDidMount () {
-    if(this.props.authUrl) {
-      // make auth api fetch call and don't repeate api calls
+    if (this.props.authUrl) {
       const oThis = this;
       const options = this.props.reqOptions || {
         method: 'GET',
@@ -24,9 +22,9 @@ class AuthProvider extends React.Component  {
         headers: {
           'Content-Type': 'application/json'
         },
-      }
+      };
       this.toggleLoading();
-      fetch(this.props.authUrl, options)
+      return fetch(this.props.authUrl, options)
         .then(function(response) {
           if (response.status !== 200) {
             return response.json()
@@ -41,6 +39,7 @@ class AuthProvider extends React.Component  {
           oThis.fetchFail(ex);
         })
     }
+    return Promise.reject();
   }
   toggleLoading() {
     this.setState({ ...this.state, isLoading: true, userInfo: null, error: null });
@@ -56,18 +55,16 @@ class AuthProvider extends React.Component  {
   }
   render() {
     return (
-      <div>
-        <Provider value={this.state}>
-          { this.props.children }
-        </Provider>
-      </div>
+      <Provider value={this.state}>
+        { this.props.children }
+      </Provider>
     );
   }
 }
 
 AuthProvider.propTypes = {
   authUrl: PropTypes.string.isRequired,
-  reqOptions: PropTypes.object.isRequired,
+  reqOptions: PropTypes.object,
   children: PropTypes.node
 };
 
