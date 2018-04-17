@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthProvider, { AuthConsumer } from '../lib';
+import { AuthProvider, AuthConsumer } from '../lib';
 
 import './App.css';
 
@@ -20,8 +20,17 @@ const imageObj = [
   }
 ]
 
+const authEndpoint = 'https://auth.commercialization66.hasura-app.io/v1/user/info';
+const reqOptions = {
+  'method': 'POST',
+  'credentials': 'include',
+  'headers': {
+    'Content-Type': 'application/json'
+  },
+}
+
 const App = (props) => (
-  <AuthProvider authEndpoint={'https://auth.commercialization66.hasura-app.io/v1/user/info'}>
+  <AuthProvider authUrl = { authEndpoint } reqOptions={ reqOptions }>
     <div className="app_wrapper">
       <div className="header_wrapper">
         <div className="header_left">
@@ -47,7 +56,7 @@ const App = (props) => (
                   if ( error ) {
                     return (
                       <div>
-                        Unable to load
+                        Error: {error.message}
                       </div>
                     )
                   }

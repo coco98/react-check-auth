@@ -15,7 +15,7 @@ class AuthProvider extends React.Component  {
     this.state = { ...defaultState, refreshAuth: this.refreshAuth };
   }
   componentDidMount () {
-    if(this.props.authUrl) {
+    if(this.props.authUrl ) {
       // make auth api fetch call and don't repeate api calls
       const oThis = this;
       const options = this.props.reqOptions || {
@@ -24,7 +24,7 @@ class AuthProvider extends React.Component  {
         headers: {
           'Content-Type': 'application/json'
         },
-      }
+      };
       this.toggleLoading();
       fetch(this.props.authUrl, options)
         .then(function(response) {
