@@ -22,7 +22,7 @@ const imageObj = [
 
 const authEndpoint = 'https://auth.commercialization66.hasura-app.io/v1/user/info';
 const reqOptions = {
-  'method': 'POST',
+  'method': 'GET',
   'credentials': 'include',
   'headers': {
     'Content-Type': 'application/json'
