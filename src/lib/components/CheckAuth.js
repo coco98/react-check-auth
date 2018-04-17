@@ -1,58 +1,57 @@
 import React from 'react';
 
+import 'whatwg-fetch';
+
+import { connect } from 'react-redux';
+
+import {
+  FETCHING_USER_INFO,
+  USER_INFO_FETCH_FAIL,
+  USER_INFO_FETCHED,
+} from '../reducer/';
+
 // {React.cloneElement(children, { isLoggedIn: isLoggedIn })}
 
-const AppContent = ({apps, authEndpoint, isLoggedIn}) => {
-	console.log(isLoggedIn);
-	console.log(authEndpoint);
-	console.log(apps);
-	console.log(apps[0]);
-	/*
-	const childrenWithProps = React.Children.map(apps, child => {
-        return React.cloneElement(child, { isLoggedIn: isLoggedIn });
-	});
-	*/
-	return (
-	  <div>
-	  	{apps}
-	  </div>
-	);
-	// return "Logged In";
-}
-
-function renderBasedOnLogin(Component) {
-  return function EnhancedComponent({ ...props }) {
-	console.log('AAAAAAAAAAAAAAAAAAAAAAA');
-	console.log(props);
-    if (props.isLoggedIn) {
-      return <Component { ...props } />;
-    }
-    return <div><p>Not Logged in...</p></div>;
-  };
-}
-
-// Usage
-const CheckAuth = renderBasedOnLogin(AppContent);
-
 class CheckAuthComp extends React.Component  {
-
-	componentDidMount () {
-        console.log('mounted!');
-        if(this.props.authEndpoint) {
-            // make auth api fetch call and don't repeate api calls
-        }
+  componentDidMount () {
+    if(this.props.authEndpoint) {
+      // make auth api fetch call and don't repeate api calls
+      const oThis = this;
+      const options = {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      }
+      this.props.dispatch({ type: FETCHING_USER_INFO });
+      fetch(this.props.authEndpoint, options)
+        .then(function(response) {
+          if (response.status !== 200) {
+            return response.json()
+            .then((r) => {
+              return Promise.reject(r)
+            });
+          }
+          return response.json();
+        }).then(function(json) {
+          oThis.props.dispatch({ type: USER_INFO_FETCHED, data: json});
+        }).catch(function(ex) {
+          oThis.props.dispatch({ type: USER_INFO_FETCH_FAIL, data: ex});
+        })
     }
-
-	render() {
-		return (
-		  <div>
-			<CheckAuth isLoggedIn={true} authEndpoint={this.props.authEndpoint} apps={this.props.children} />
-		  </div>
-		);
-	}
+  }
+  render() {
+    return (
+      <div>
+        { this.props.children }
+      </div>
+    );
+  }
 }
 
-export default CheckAuthComp;
+const mapStateToProps = ( state ) => {
+  return { ...state };
+};
 
-// export { AppContent };
-
+export default connect(mapStateToProps)(CheckAuthComp);
