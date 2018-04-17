@@ -1,9 +1,10 @@
-import React from 'react';
 import { connect } from 'react-redux';
+
+import { generateValidChilds } from '../utils/generateElem';
 
 const LoggedOut = ( props ) => {
   return !props.isLoggedIn ? (
-    React.cloneElement(props.children, { ...props.userInfo })
+    generateValidChilds(props.children, { isLoggedIn: props.isLoggedIn, userInfo: props.userInfo, fetchError: props.fetchError })
   ) : null;
 };
 

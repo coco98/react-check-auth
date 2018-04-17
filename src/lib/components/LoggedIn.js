@@ -1,6 +1,7 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import './LoggedIn.css';
+
+import { generateValidChilds } from '../utils/generateElem';
 
 /*
 class LoggedIn extends React.Component  {
@@ -16,7 +17,7 @@ class LoggedIn extends React.Component  {
 */
 const LoggedIn = ( props ) => {
   return props.isLoggedIn ? (
-    React.cloneElement(props.children, { isLoggedIn: props.isLoggedIn, userInfo: props.userInfo, fetchError: props.fetchError })
+    generateValidChilds(props.children, { isLoggedIn: props.isLoggedIn, userInfo: props.userInfo, fetchError: props.fetchError })
   ) : null;
 };
 

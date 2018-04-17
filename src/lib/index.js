@@ -2,6 +2,7 @@ import React from 'react';
 import CheckAuthComp from './components/CheckAuth';
 import LoggedOut from './components/LoggedOut';
 import LoggedIn from './components/LoggedIn';
+import CheckAuth from './components/CustomCheckAuth';
 
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
@@ -25,17 +26,12 @@ const store = createStore(
   applyMiddleware(...middleware)
 );
 
-class ProviderWrapped extends React.Component {
-  render() {
-    return (
-      <Provider store={ store }>
-        <CheckAuthComp { ...this.props }>
-          { this.props.children }
-        </CheckAuthComp>
-      </Provider>
-    );
-  }
-}
+const ProviderWrapped = (props) =>
+  <Provider store={ store }>
+    <CheckAuthComp { ...props }>
+      { props.children }
+    </CheckAuthComp>
+  </Provider>
 
 export default ProviderWrapped;
-export { LoggedOut, LoggedIn };
+export { CheckAuth, LoggedOut, LoggedIn };
