@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthProvider, { CheckAuth } from '../lib';
+import AuthProvider, { AuthConsumer } from '../lib';
 
 import './App.css';
 
@@ -36,18 +36,26 @@ const App = (props) => (
           <li><span>About</span></li>
           <li>
             <span>
-              <CheckAuth>
-                { ({ isFetching: isLoading, isLoggedIn, userInfo, fetchError: error }) => {
+              <AuthConsumer>
+                { (props) => {
+                  const { isLoading, userInfo, error, refreshAuth } = props;
                   if ( isLoading ) {
                     return (
                       <span>Loading...</span>
                     )
                   }
+                  if ( error ) {
+                    return (
+                      <div>
+                        Unable to load
+                      </div>
+                    )
+                  }
                   return (
-                    !isLoggedIn ? <div><a href={ `https://auth.commercialization66.hasura-app.io/ui?redirect_url=http://localhost:3000` }>Login </a></div> : <div>{ isLoading ? 'Loading...' : `Hello ${ userInfo.username }`}</div>
+                    !userInfo ? <div><a href={ `https://auth.commercialization66.hasura-app.io/ui?redirect_url=http://localhost:3000` }>Login </a></div> : <div> {`Hello ${ userInfo.username }`} <button onClick={ refreshAuth }>Logout </button></div>
                   );
                 }}
-              </CheckAuth>
+              </AuthConsumer>
             </span>
           </li>
         </ul>

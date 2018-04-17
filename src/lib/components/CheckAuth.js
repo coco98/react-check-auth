@@ -1,18 +1,18 @@
 import React from 'react';
 
+import { Provider, defaultState } from '../context';
+
 import 'whatwg-fetch';
 
-import { connect } from 'react-redux';
-
-import {
-  FETCHING_USER_INFO,
-  USER_INFO_FETCH_FAIL,
-  USER_INFO_FETCHED,
-} from '../reducer/';
-
-// {React.cloneElement(children, { isLoggedIn: isLoggedIn })}
-
-class CheckAuthComp extends React.Component  {
+class AuthProvider extends React.Component  {
+  constructor() {
+    super();
+    this.toggleLoading = this.toggleLoading.bind(this);
+    this.fetchSuccess = this.fetchSuccess.bind(this);
+    this.fetchFail = this.fetchFail.bind(this);
+    this.refreshAuth = this.refreshAuth.bind(this);
+    this.state = { ...defaultState, refreshAuth: this.refreshAuth };
+  }
   componentDidMount () {
     if(this.props.authEndpoint) {
       // make auth api fetch call and don't repeate api calls
@@ -24,7 +24,7 @@ class CheckAuthComp extends React.Component  {
           'Content-Type': 'application/json'
         },
       }
-      this.props.dispatch({ type: FETCHING_USER_INFO });
+      this.toggleLoading();
       fetch(this.props.authEndpoint, options)
         .then(function(response) {
           if (response.status !== 200) {
@@ -35,23 +35,33 @@ class CheckAuthComp extends React.Component  {
           }
           return response.json();
         }).then(function(json) {
-          oThis.props.dispatch({ type: USER_INFO_FETCHED, data: json});
+          oThis.fetchSuccess(json);
         }).catch(function(ex) {
-          oThis.props.dispatch({ type: USER_INFO_FETCH_FAIL, data: ex});
+          oThis.fetchFail(ex);
         })
     }
+  }
+  toggleLoading() {
+    this.setState({ ...this.state, isLoading: true, userInfo: null, error: null });
+  }
+  fetchSuccess(data) {
+    this.setState({ ...this.state, userInfo: data, isLoading: false, error: null });
+  }
+  fetchFail(err) {
+    this.setState({ ...this.state, userInfo: null, isLoading: false, error: err});
+  }
+  refreshAuth() {
+    this.setState({ ...this.state, ...defaultState });
   }
   render() {
     return (
       <div>
-        { this.props.children }
+        <Provider value={this.state}>
+          { this.props.children }
+        </Provider>
       </div>
     );
   }
 }
 
-const mapStateToProps = ( state ) => {
-  return { ...state };
-};
-
-export default connect(mapStateToProps)(CheckAuthComp);
+export default AuthProvider;

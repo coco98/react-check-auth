@@ -1,14 +1,14 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
 import PropTypes from 'prop-types';
+
+import { Consumer } from '../context';
 
 class CustomCheckAuth extends React.Component {
   render() {
     return (
-      <div>
-        { this.props.children( { ...this.props })}
-      </div>
+      <Consumer>
+        { (props) => this.props.children( { ...props })}
+      </Consumer>
     );
   }
 };
@@ -17,8 +17,4 @@ CustomCheckAuth.propTypes = {
   children: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  return { ...state };
-};
-
-export default connect(mapStateToProps)(CustomCheckAuth);
+export default CustomCheckAuth;
