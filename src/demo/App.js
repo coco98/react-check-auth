@@ -1,7 +1,5 @@
 import React from 'react';
-import CheckAuthComp from '../lib';
-import LoggedIn from '../lib';
-import NotLoggedIn from '../lib';
+import { CheckAuthComp, LoggedIn, NotLoggedIn} from '../lib';
 
 const App = () => (
   <div>

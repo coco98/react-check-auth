@@ -2,29 +2,30 @@ import React from 'react';
 
 // {React.cloneElement(children, { isLoggedIn: isLoggedIn })}
 
-const AppContent = ({children, authEndpoint, isLoggedIn}) => {
+const AppContent = ({apps, authEndpoint, isLoggedIn}) => {
 	console.log(isLoggedIn);
 	console.log(authEndpoint);
-	console.log(children);
-	const childrenWithProps = React.Children.map(children, child => {
-		console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
-		console.log(children);
-		console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
-        React.cloneElement(children, { isLoggedIn: isLoggedIn })
+	console.log(apps);
+	console.log(apps[0]);
+	/*
+	const childrenWithProps = React.Children.map(apps, child => {
+        return React.cloneElement(child, { isLoggedIn: isLoggedIn });
 	});
-	console.log(childrenWithProps);
+	*/
 	return (
 	  <div>
-	  	{childrenWithProps}
+	  	{apps}
 	  </div>
 	);
 	// return "Logged In";
 }
 
 function renderBasedOnLogin(Component) {
-  return function EnhancedComponent({ isLoggedIn, ...props }) {
-    if (isLoggedIn) {
-      return <Component isLoggedIn={isLoggedIn} { ...props } />;
+  return function EnhancedComponent({ ...props }) {
+	console.log('AAAAAAAAAAAAAAAAAAAAAAA');
+	console.log(props);
+    if (props.isLoggedIn) {
+      return <Component { ...props } />;
     }
     return <div><p>Not Logged in...</p></div>;
   };
@@ -43,15 +44,9 @@ class CheckAuthComp extends React.Component  {
     }
 
 	render() {
-	  	console.log('ZZZZZZZZZZZZZZZZZZZ');
-		console.log(this.props);
 		return (
 		  <div>
-			<CheckAuth
-			  isLoggedIn={true}
-			  authEndpoint={this.props.authEndpoint}
-			  children={this.props.children}
-			/>
+			<CheckAuth isLoggedIn={true} authEndpoint={this.props.authEndpoint} apps={this.props.children} />
 		  </div>
 		);
 	}
