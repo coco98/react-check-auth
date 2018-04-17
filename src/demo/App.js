@@ -8,9 +8,9 @@ const logo = require('./hasura.png');
 const authEndpoint = 'https://auth.commercialization66.hasura-app.io/v1/user/info';
 const reqOptions = {
   'method': 'GET',
+  'credentials': 'include',
   'headers': {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer 9a17d009dd48c18db768816eef6f633dc2b26dbb8cb672c4',
+    'Content-Type': 'application/json'
   },
 }
 
