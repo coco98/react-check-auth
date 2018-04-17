@@ -31,7 +31,7 @@ describe('Auth Provider Fetch', () => {
   it('Test no session', async () => {
     const successWrapper = shallow(<AuthProvider authUrl={ authEndpoint } reqOptions={ reqOptions }></AuthProvider>);
     await successWrapper.instance().componentDidMount();
-    expect(successWrapper.state(`fetchError`)).toBeUndefined()
+    expect(successWrapper.state(`userInfo`)).toBeNull()
   })
 
   it('Test error fetch', async () => {
@@ -41,7 +41,7 @@ describe('Auth Provider Fetch', () => {
     await successWrapper.instance().componentDidMount();
     // console.log('newReqOpts');
     // console.log(successWrapper.state())
-    expect(successWrapper.state(`fetchError`)).toBeUndefined()
+    expect(successWrapper.state(`userInfo`)).toBeNull()
   })
 
   it('Test success fetch', async () => {
@@ -69,5 +69,19 @@ describe('Auth Provider Fetch', () => {
     const successWrapper = shallow(<AuthProvider authUrl={ newAuthEndpoint } reqOptions={ newReqOpts }></AuthProvider>);
     await successWrapper.instance().componentDidMount();
     expect(successWrapper.state(`error`)).toHaveProperty('name': 'FetchError');
+  });
+
+  it('Test refresh state', async () => {
+    const newReqOpts = { ...reqOptions };
+    newReqOpts.method = 'GET';
+    newReqOpts.headers = {
+      'Content-Type': 'application/json',
+    };
+    const newAuthEndpoint = 'https://bcbab947-cfc1-4128-b907-1a814f5f1c84.mock.pstmn.io/t2';
+    const successWrapper = shallow(<AuthProvider authUrl={ newAuthEndpoint } reqOptions={ newReqOpts }></AuthProvider>);
+    await successWrapper.instance().componentDidMount();
+    expect(successWrapper.state(`userInfo`)).toHaveProperty('Hello': 'World');
+    successWrapper.state(`refreshAuth`)()
+    expect(successWrapper.state(`userInfo`)).toBeNull();
   });
 })
