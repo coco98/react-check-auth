@@ -10,11 +10,12 @@ $ npm install --save react-check-auth
 
 ``` javascript
   import React from 'react';
-  import CheckAuth from 'react-check-auth';
+  import {AuthProvider, AuthConsumer} from 'react-check-auth';
 
   const App = () => (
     <div>
-      <CheckAuth> 
+     <AuthProvider authUrl={authUrl} reqObj={reqObj}>
+      <AuthConsumer> 
         { ({ isLoading, userInfo, error }) => { 
           if ( isLoading ) { 
             return ( <span>Loading...</span> )
@@ -28,7 +29,8 @@ $ npm install --save react-check-auth
               {Hello ${ userInfo.username }}
             </div>) );
         }}
-      </CheckAuth>
+       </AuthConsumer>
+      </AuthProvider>
     </div>
   );
 ```
@@ -44,14 +46,16 @@ The hard part about showing user information or Login button is that your react 
 
 ``` javascript
   import React from 'react';
-  import CheckAuth from 'react-check-auth';
+  import { AuthProvider, AuthConsumer } from 'react-check-auth';
+  
 
   const Header = () => (
     <div>
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/about">About Us</a></li>
-        <CheckAuth> 
+        <AuthProvider authUrl={authUrl}>
+        <AuthConsumer> 
         { ({ isLoading, userInfo, error }) => { 
           if ( isLoading ) { 
             return ( <span>Loading...</span> )
@@ -70,7 +74,8 @@ The hard part about showing user information or Login button is that your react 
             );
           }
         }}
-        </CheckAuth>
+        </AuthConsumer>
+        </AuthProvider>
       </ul>
       
     </div>
@@ -101,6 +106,7 @@ And inside your App.js component render, you can wrap it entirely with <CheckAut
 
 ``` javascript
 render () {
+   <AuthProvider authUrl={authUrl}>
     <CheckAuth> 
       { ({ isLoading, userInfo, error }) => { 
         if ( isLoading ) { 
@@ -131,12 +137,13 @@ Hasura's Auth API can be integrated with this module with a simple auth get endp
   const authEndpoint = 'https://auth.[CLUSTER_NAME].hasura-app.io/v1/user/info';
 
   // pass the above reqObject to CheckAuth
-  <CheckAuth authEndpoint={authEndpoint}>
+  <AuthProvider authUrl={authEndpoint}>
+    <AuthConsumer>
     { ({ isLoading, userInfo, error }) => { 
       // your implementation here
     } }
-
-  </CheckAuth>
+    </AuthConsumer>
+  </AuthProvider>
 ```
 
 
@@ -146,15 +153,17 @@ Hasura's Auth API can be integrated with this module with a simple auth get endp
 
 ```
   // replace API_KEY with your Firebase API Key and ID_TOKEN appropriately.
-  const reqObject = {'url': 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=[API_KEY]', 'method': 'POST', 'payload': {'idToken': '[ID_TOKEN]'}, 'headers': {'content-type': 'application/json'}};
+  const authUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=[API_KEY]';
+  const reqObject = { 'method': 'POST', 'payload': {'idToken': '[ID_TOKEN]'}, 'headers': {'content-type': 'application/json'}};
 
   // pass the above reqObject to CheckAuth
-  <CheckAuth authReqObject={reqObject}>
+  <AuthProvider authUrl={authUrl} reqObject={reqObject}>
+    <AuthConsumer>
     { ({ isLoading, userInfo, error }) => { 
       // your implementation here
     } }
-
-  </CheckAuth>
+    </AuthConsumer>
+  </AuthProvider>
 ```
 
 #### Auth0
