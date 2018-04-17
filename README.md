@@ -10,11 +10,12 @@ $ npm install --save react-check-auth
 
 ``` javascript
   import React from 'react';
-  import CheckAuth from 'react-check-auth';
+  import {AuthProvider, AuthConsumer} from 'react-check-auth';
 
   const App = () => (
     <div>
-      <CheckAuth> 
+     <AuthProvider authUrl={authUrl} reqObj={reqObj}>
+      <AuthConsumer> 
         { ({ isLoading, userInfo, error }) => { 
           if ( isLoading ) { 
             return ( <span>Loading...</span> )
@@ -28,16 +29,58 @@ $ npm install --save react-check-auth
               {Hello ${ userInfo.username }}
             </div>) );
         }}
-      </CheckAuth>
+       </AuthConsumer>
+      </AuthProvider>
     </div>
   );
 ```
 
 ## Use Cases
 
-`React Check Auth` can be applied to commonly used cases like 
+`React Check Auth` can be applied to common use cases like:
 
 ### Frontend Session Management
+
+In a typical web ui, the header component of your application will have navigation links, signup/signin links or logged in user's profile information, depending on whether the user is logged in or not. 
+The hard part about showing user information or Login button is that your react app needs to make an Auth API call to fetch session information, maintain state and boilerplate code has to be written to handle this. You also need to make sure that state is available anywhere within your child components as well. 
+
+``` javascript
+  import React from 'react';
+  import { AuthProvider, AuthConsumer } from 'react-check-auth';
+  
+
+  const Header = () => (
+    <div>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+        <AuthProvider authUrl={authUrl}>
+        <AuthConsumer> 
+        { ({ isLoading, userInfo, error }) => { 
+          if ( isLoading ) { 
+            return ( <span>Loading...</span> )
+          }
+          if ( userInfo ) {
+            return (
+              <li>
+                {Hello ${ userInfo.username }}
+              </li) 
+            );
+          } else {
+            return (
+              <li>
+                <a href="/login">Login</a>
+              </li>
+            );
+          }
+        }}
+        </AuthConsumer>
+        </AuthProvider>
+      </ul>
+      
+    </div>
+  );
+```
 
 ### Using with React Router
 
@@ -63,6 +106,7 @@ And inside your App.js component render, you can wrap it entirely with <CheckAut
 
 ``` javascript
 render () {
+   <AuthProvider authUrl={authUrl}>
     <CheckAuth> 
       { ({ isLoading, userInfo, error }) => { 
         if ( isLoading ) { 
@@ -75,8 +119,7 @@ render () {
           : 
           (<div>
             {Hello ${ userInfo.username }}
-            <Component1 />
-            <Component2 />
+            <Route component={myApp} />
           </div>) );
       }}
     </CheckAuth>
@@ -87,21 +130,40 @@ render () {
 
 #### Hasura
 
-#### Firebase
-
-`CheckAuth` can be integrated with Firebase.
+Hasura's Auth API can be integrated with this module with a simple auth get endpoint  and can also be used to redirect the user to Hasura's Auth UI Kit in case the user is not logged in.
 
 ```
-  // replace API_KEY with your Firebase API Key and ID_TOKEN appropriately.
-  const reqObject = {'url': 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=[API_KEY]', 'method': 'POST', 'payload': {'idToken': '[ID_TOKEN]'}, 'headers': {'content-type': 'application/json'}};
+  // replace CLUSTER_NAME with your Hasura cluster name.
+  const authEndpoint = 'https://auth.[CLUSTER_NAME].hasura-app.io/v1/user/info';
 
   // pass the above reqObject to CheckAuth
-  <CheckAuth authReqObject={reqObject}>
+  <AuthProvider authUrl={authEndpoint}>
+    <AuthConsumer>
     { ({ isLoading, userInfo, error }) => { 
       // your implementation here
     } }
+    </AuthConsumer>
+  </AuthProvider>
+```
 
-  </CheckAuth>
+
+#### Firebase
+
+`CheckAuth` can be integrated with Firebase APIs.
+
+```
+  // replace API_KEY with your Firebase API Key and ID_TOKEN appropriately.
+  const authUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=[API_KEY]';
+  const reqObject = { 'method': 'POST', 'payload': {'idToken': '[ID_TOKEN]'}, 'headers': {'content-type': 'application/json'}};
+
+  // pass the above reqObject to CheckAuth
+  <AuthProvider authUrl={authUrl} reqObject={reqObject}>
+    <AuthConsumer>
+    { ({ isLoading, userInfo, error }) => { 
+      // your implementation here
+    } }
+    </AuthConsumer>
+  </AuthProvider>
 ```
 
 #### Auth0
