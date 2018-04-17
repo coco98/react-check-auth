@@ -1,5 +1,5 @@
-import AuthProvider from './components/CheckAuth';
-import AuthConsumer from './components/CustomCheckAuth';
+import AuthProvider from './components/AuthProvider';
+import AuthConsumer from './components/AuthConsumer';
 
 export default AuthProvider;
 export { AuthConsumer };
